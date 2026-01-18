@@ -8,13 +8,15 @@ add_link_options(-fsanitize=address,undefined)
 
 add_executable(auth_server)
 target_sources(auth_server PRIVATE
-  main.cpp
-  server.hpp
-  server.cpp
-  udp_socket.hpp
-  udp_socket.cpp
-  udp_session.hpp
-  udp_session.cpp
-  command.hpp
+  auth.cpp
+  auth.hpp
   command.cpp
+  command.hpp
+  main.cpp
+  server.cpp
+  server.hpp
+  udp_session.cpp
+  udp_session.hpp
+  udp_socket.cpp
+  udp_socket.hpp
 )
