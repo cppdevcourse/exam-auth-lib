@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
         auto stopServer = [](int)
         {
             std::cout << "Stopping server...\n";
-            server_running = false;
+            server_running.store(false, std::memory_order_relaxed);
         };
         std::signal(SIGINT, stopServer);
         std::signal(SIGTERM, stopServer);
