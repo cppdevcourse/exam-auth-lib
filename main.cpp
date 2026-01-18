@@ -1,3 +1,5 @@
+#include <atomic>
+#include <csignal>
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
@@ -7,6 +9,8 @@
 
 namespace
 {
+
+std::atomic<bool> server_running = true;
 
 void print_usage(std::string_view basename)
 {
@@ -51,7 +55,16 @@ int main(int argc, char* argv[])
     try
     {
         const int port = parse_port(argv[3]);
-        auth::server::Server server{argv[1], argv[2], port};
+        auth::server::Server server{argv[1], argv[2], port, server_running};
+
+        auto stopServer = [](int)
+        {
+            std::cout << "Stopping server...\n";
+            server_running = false;
+        };
+        std::signal(SIGINT, stopServer);
+        std::signal(SIGTERM, stopServer);
+
         server.Run();
         return EXIT_SUCCESS;
     }
