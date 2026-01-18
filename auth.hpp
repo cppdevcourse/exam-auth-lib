@@ -5,7 +5,7 @@ namespace auth
 namespace core
 {
 
-// TODO
+// TODO: добавьте объявления классов/функций
 
 } // namespace core
 } // namespace auth

@@ -50,22 +50,22 @@ std::string process_command(std::string_view income)
         const auto vargs = command.GetArgs();
         if (std::holds_alternative<args::Login>(vargs))
         {
-            // TODO
+            // TODO: обработайте команду login
             [[maybe_unused]] const auto args = std::get<args::Login>(vargs);
         }
         else if (std::holds_alternative<args::Logout>(vargs))
         {
-            // TODO
+            // TODO: обработайте команду logout
             [[maybe_unused]] const auto args = std::get<args::Logout>(vargs);
         }
         else if (std::holds_alternative<args::Adduser>(vargs))
         {
-            // TODO
+            // TODO: обработайте команду adduser
             [[maybe_unused]] const auto args = std::get<args::Adduser>(vargs);
         }
         else if (std::holds_alternative<args::Deluser>(vargs))
         {
-            // TODO
+            // TODO: обработайте команда deluser
             [[maybe_unused]] const auto args = std::get<args::Deluser>(vargs);
         }
     }
@@ -83,7 +83,8 @@ Server::Server(std::string_view adminUsername,
     const std::atomic<bool>& running)
     : running_(running), socket_(port), session_(socket_)
 {
-    // TODO
+    // TODO: добавьте администратора с именем и паролем
+    // из параметров конструктора
     std::cout << "Add administrator user '" << adminUsername << "/***'\n";
     std::cout << "Listening on port " << port << '\n';
 }
