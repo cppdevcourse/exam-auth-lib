@@ -2,6 +2,10 @@
 
 #include <atomic>
 #include <string_view>
+
+#include "udp_session.hpp"
+#include "udp_socket.hpp"
+
 namespace auth
 {
 namespace server
@@ -16,8 +20,12 @@ public:
     void Stop();
 
 private:
-    const int port_;
+    void ProcessIncome();
+
+private:
     const std::atomic<bool>& running_;
+    UdpSocket socket_;
+    UdpSession session_;
 };
 
 } // namespace server

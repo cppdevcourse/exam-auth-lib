@@ -15,4 +15,6 @@ target_sources(auth_server PRIVATE
   udp_socket.cpp
   udp_session.hpp
   udp_session.cpp
+  command.hpp
+  command.cpp
 )
