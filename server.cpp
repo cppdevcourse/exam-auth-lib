@@ -12,11 +12,15 @@
 #include "udp_session.hpp"
 #include "udp_socket.hpp"
 #include "command.hpp"
+#include "auth.hpp"
 
 namespace auth
 {
 namespace server
 {
+
+static auth::core::AuthManager authManager;
+
 
 namespace
 {
@@ -50,23 +54,43 @@ std::string process_command(std::string_view income)
         const auto vargs = command.GetArgs();
         if (std::holds_alternative<args::Login>(vargs))
         {
-            // TODO: обработайте команду login
-            [[maybe_unused]] const auto args = std::get<args::Login>(vargs);
+            const auto args = std::get<args::Login>(vargs);
+            const auto session = authManager.Login(std::string(args.username), std::string(args.password));
+
+            if (!session)
+                return "error: invalud username or password\n";
+
+            return "session_id=" + std::to_string(*session) + "\n";
         }
         else if (std::holds_alternative<args::Logout>(vargs))
         {
-            // TODO: обработайте команду logout
-            [[maybe_unused]] const auto args = std::get<args::Logout>(vargs);
+            const auto args = std::get<args::Logout>(vargs);
+
+            if (!authManager.Logout(std::stoull(std::string(args.sessionId)))) 
+                return "error: invalid session\n";
+
+            return "ok\n";
         }
         else if (std::holds_alternative<args::Adduser>(vargs))
         {
-            // TODO: обработайте команду adduser
-            [[maybe_unused]] const auto args = std::get<args::Adduser>(vargs);
+            const auto args = std::get<args::Adduser>(vargs);
+
+            if (!authManager.AddUser(std::stoull(std::string(args.sessionId)),
+                                     std::string(args.username),
+                                     std::string(args.password)))
+                return "error: access denied or user exists\n";
+            
+            return "ok\n";
         }
         else if (std::holds_alternative<args::Deluser>(vargs))
         {
-            // TODO: обработайте команда deluser
-            [[maybe_unused]] const auto args = std::get<args::Deluser>(vargs);
+            const auto args = std::get<args::Deluser>(vargs);
+
+            if (!authManager.DelUser(std::stoull(std::string(args.sessionId)),
+                                     std::string(args.username)))
+                return "error: access denied or user not found\n";
+            
+            return "ok\n";
         }
     }
     catch (const std::exception& err)
@@ -83,8 +107,8 @@ Server::Server(std::string_view adminUsername,
     const std::atomic<bool>& running)
     : running_(running), socket_(port), session_(socket_)
 {
-    // TODO: добавьте администратора с именем и паролем
-    // из параметров конструктора
+    authManager.AddAdmin(std::string(adminUsername), std::string(adminPassword));
+    
     std::cout << "Add administrator user '" << adminUsername << "/***'\n";
     std::cout << "Listening on port " << port << '\n';
 }
