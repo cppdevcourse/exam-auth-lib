@@ -20,15 +20,20 @@ Lexemes split(std::string_view str)
     Lexemes lexemes{};
     std::size_t start = 0;
 
-    while (true)
+    while (start < str.size())
     {
-        size_t pos = str.find(' ', start);
+        const std::size_t pos = str.find_first_of(" \t", start);
         if (pos == std::string_view::npos)
         {
             lexemes.emplace_back(str.substr(start));
             break;
         }
-        lexemes.emplace_back(str.substr(start, pos - start));
+
+        if (pos > start)
+        {
+            lexemes.emplace_back(str.substr(start, pos - start));
+        }
+
         start = pos + 1;
     }
 

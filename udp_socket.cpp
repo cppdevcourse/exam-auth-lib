@@ -28,7 +28,7 @@ UdpSocket::UdpSocket(const int port)
 
     sockaddr bindAddr{};
     static_assert(sizeof(addr) == sizeof(bindAddr));
-    std::memcpy(&bindAddr, &addr, sizeof(addr));
+    std::memcpy(&bindAddr, &addr, sizeof(bindAddr));
 
     if (bind(fd_, &bindAddr, sizeof(bindAddr)) < 0)
     {
