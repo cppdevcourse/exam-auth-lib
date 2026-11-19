@@ -65,7 +65,7 @@ std::string process_command(std::string_view income)
         }
         else if (std::holds_alternative<args::Deluser>(vargs))
         {
-            // TODO: обработайте команда deluser
+            // TODO: обработайте команду deluser
             [[maybe_unused]] const auto args = std::get<args::Deluser>(vargs);
         }
     }
