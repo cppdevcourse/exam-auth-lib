@@ -1,3 +1,4 @@
+#include <cstring>
 #include <stdexcept>
 
 #include <arpa/inet.h>
@@ -25,7 +26,11 @@ UdpSocket::UdpSocket(const int port)
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
 
-    if (bind(fd_, reinterpret_cast<const sockaddr*>(&addr), sizeof(addr)) < 0)
+    sockaddr bindAddr{};
+    static_assert(sizeof(addr) == sizeof(bindAddr));
+    std::memcpy(&bindAddr, &addr, sizeof(bindAddr));
+
+    if (bind(fd_, &bindAddr, sizeof(bindAddr)) < 0)
     {
         close(fd_);
         throw std::runtime_error("failed to bind socket to address");
